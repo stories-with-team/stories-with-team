@@ -1,24 +1,30 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {StoryMap} from './interface/StoryMap'
+import StoryBoard from './components/StoryBoard'
 
 const App: React.FC = () => {
+  const storyMap: StoryMap = {
+    storyList: [
+      {
+        activity: { description: 'あああ' },
+        details: [
+          { description: 'いいい' }, 
+          { description: 'ううう' }
+        ]
+      }, {
+        activity: { description: 'かかか' },
+        details: [
+          { description: 'ききき' }, 
+          { description: 'くくく' }
+        ]
+      }
+    ]
+  } as StoryMap
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <StoryBoard storyMap={storyMap}/>
     </div>
   );
 }

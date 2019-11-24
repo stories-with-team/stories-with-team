@@ -1,0 +1,23 @@
+.storyboard {
+    display: flex;
+    overflow-x: auto;
+}
+.story-bag {
+    width: 150px;
+    min-width: 150px;
+}
+.story-box {
+    margin: 5px;
+    padding: 5px;
+    border: 1px solid #000000;
+    text-align: left;
+    font-size: small;
+}
+
+.story-activity {
+    background-color: #f8ffb8;
+}
+
+.story-detail {
+    background-color: #ffb7ae;
+}

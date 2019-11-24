@@ -16,7 +16,38 @@ const App: React.FC = () => {
       }, {
         activity: { description: 'かかか' },
         details: [
-          { description: 'ききき' }, 
+          { description: 'ききき\naaa' }, 
+          { description: 'くくく' }
+        ]
+      }, {
+        activity: { description: 'かかか' },
+        details: [
+          { description: 'ききき\naaa' }, 
+          { description: 'くくく' },
+          { description: 'けけけ' }
+        ]
+      }, {
+        activity: { description: 'かかか' },
+        details: [
+          { description: 'ききき\naaa' }, 
+          { description: 'くくく' }
+        ]
+      }, {
+        activity: { description: 'かかか' },
+        details: [
+          { description: 'ききき\naaa' }, 
+          { description: 'くくく' }
+        ]
+      }, {
+        activity: { description: 'かかか' },
+        details: [
+          { description: 'ききき\naaa' }, 
+          { description: 'くくく' }
+        ]
+      }, {
+        activity: { description: 'かかか' },
+        details: [
+          { description: 'ききき\naaa' }, 
           { description: 'くくく' }
         ]
       }

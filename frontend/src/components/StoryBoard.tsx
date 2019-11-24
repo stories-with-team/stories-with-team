@@ -1,6 +1,8 @@
 import React from 'react';
 import {StoryMap, Story, StoryDetail} from '../interface/StoryMap'
 
+import './StoryBoard.css'
+
 type DetailBagProps = {
   detail: StoryDetail
 }
@@ -17,17 +19,19 @@ type StoryBagProps = {
 const StoryBag: React.SFC<StoryBagProps> = (props) => {
   const {story} = props
   return (
-    <React.Fragment>
-      <div>
+    <div className="story-bag">
+      <div className="story-box story-activity">
       {story.activity.description}
       </div>
       <div>
       {story.details.map(detail => 
-        <div>{<DetailBag detail={detail} />}</div>
+        <div className="story-box story-detail">
+          {<DetailBag detail={detail} />}
+        </div>
       )}
       </div>
      
-    </React.Fragment>
+    </div>
   );
 }
 
@@ -38,15 +42,13 @@ type StoryBoardProps = {
 const StoryBoard: React.SFC<StoryBoardProps> = (props) => {
   const {storyMap}= props
   return (
-    <React.Fragment>
+    <div className="storyboard">
       {
         storyMap.storyList.map(story =>
-          <span>
-            <StoryBag story={story} />
-          </span>
+          <StoryBag story={story} />
         )
       }
-    </React.Fragment>
+    </div>
   );
 }
 

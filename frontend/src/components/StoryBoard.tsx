@@ -9,7 +9,7 @@ type DetailBagProps = {
 const DetailBag: React.SFC<DetailBagProps> = (props) => {
   const {detail} = props
   return (
-    <React.Fragment>{detail.description}</React.Fragment>
+    <StoryCard text={detail.description}/>
   )
 }
 type StoryBagProps = {
@@ -21,7 +21,7 @@ const StoryBag: React.SFC<StoryBagProps> = (props) => {
   return (
     <div className="story-bag">
       <div className="story-box story-activity">
-      {story.activity.description}
+        <StoryCard text={story.activity.description} />
       </div>
       <div>
       {story.details.map(detail => 
@@ -33,6 +33,21 @@ const StoryBag: React.SFC<StoryBagProps> = (props) => {
      
     </div>
   );
+}
+
+type StoryCardProps = {
+  text: string
+}
+
+const StoryCard: React.SFC<StoryCardProps> = (props) => {
+  const {text} = props
+  return (
+    <React.Fragment>
+      {text.split(/\n/).map(line =>
+        <div>{line}</div>
+      )}
+    </React.Fragment>
+  )
 }
 
 type StoryBoardProps = {

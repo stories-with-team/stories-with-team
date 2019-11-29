@@ -9,9 +9,11 @@
 .story-box {
   margin: 5px;
   padding: 5px;
-  border: 1px solid #000000;
   text-align: left;
   font-size: small;
+  height: 70px;
+  overflow-y: auto;
+  filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.6));
 }
 
 .story-activity {

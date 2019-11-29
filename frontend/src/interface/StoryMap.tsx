@@ -1,12 +1,16 @@
-
-export interface StoryActivity {
-  description: string
-}
-export interface StoryDetail {
-  description: string
+import nanoid from 'nanoid'
+interface WithId {
+  id: string
 }
 
-export interface Story {
+export interface StoryActivity extends WithId {
+  description: string
+}
+export interface StoryDetail extends WithId {
+  description: string
+}
+
+export interface Story extends WithId {
   activity: StoryActivity
   details: StoryDetail[]
 }
@@ -26,17 +30,24 @@ export function newStoryMap(title: string, storyList: Story[]) {
 export function newStory(description: string) {
   return {
     activity: {
-      description
+      description,
+      id: nanoid()
     },
-    details: []
+    details: [],
+    id: nanoid()
   } as Story
 }
 
 export function addDetail(story: Story, detailDescription: string) {
+  const newDetail = {
+    description: detailDescription,
+    id: nanoid()
+  }
   return {
     activity: {
       description: story.activity.description
     },
-    details: [...story.details, {description: detailDescription}]
+    details: [...story.details, newDetail],
+    id: story.id
   } as Story
 }

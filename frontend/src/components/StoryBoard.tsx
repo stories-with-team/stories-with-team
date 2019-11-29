@@ -24,13 +24,13 @@ const StoryBag: React.SFC<StoryBagProps> = (props) => {
         <StoryCard text={story.activity.description} />
       </div>
       <div>
-      {story.details.map(detail => 
-        <div className="story-box story-detail">
+      {story.details.map(detail =>
+        <div className="story-box story-detail" key={detail.id}>
           {<DetailBag detail={detail} />}
         </div>
       )}
       </div>
-     
+
     </div>
   );
 }
@@ -43,8 +43,8 @@ const StoryCard: React.SFC<StoryCardProps> = (props) => {
   const {text} = props
   return (
     <React.Fragment>
-      {text.split(/\n/).map(line =>
-        <div>{line}</div>
+      {text.split(/\n/).map((line, i) =>
+        <div key={i}>{line}</div>
       )}
     </React.Fragment>
   )
@@ -60,7 +60,7 @@ const StoryBoard: React.SFC<StoryBoardProps> = (props) => {
     <div className="storyboard">
       {
         storyMap.storyList.map(story =>
-          <StoryBag story={story} />
+          <StoryBag story={story} key={story.id}/>
         )
       }
     </div>

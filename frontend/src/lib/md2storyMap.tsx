@@ -50,7 +50,7 @@ export function markdown2storyMap(markdown: string): StoryMap {
         // New Story
         return [title, [...stories, newStory(mdHeadLine.lineText())]]
       } else if(level === 3) {
-        if(stories.length == 0)
+        if(stories.length === 0)
           throw new Error("Adding a detail for empty stories")
         const story = stories[stories.length - 1]
         return [title, [...stories.slice(0, -1), addDetail(story, mdHeadLine.lineText())]]

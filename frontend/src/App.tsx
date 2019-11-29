@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {StoryMap} from './interface/StoryMap'
 import StoryBoard from './components/StoryBoard'

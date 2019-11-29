@@ -15,6 +15,7 @@ it('convert markdown to story map', () => {
 afasa
   `
   const storyMap = markdown2storyMap(md)
+  expect(storyMap.title).toBe('aaaa')
   expect(storyMap.storyList).toHaveLength(2)
   expect(storyMap.storyList[0].activity.description).toBe('abc')
   expect(storyMap.storyList[0].details).toHaveLength(2)

@@ -12,11 +12,13 @@ export interface Story {
 }
 
 export interface StoryMap{
+  title: string
   storyList: Story[]
 }
 
-export function newStoryMap(storyList: Story[]) {
+export function newStoryMap(title: string, storyList: Story[]) {
   return {
+    title,
     storyList
   } as StoryMap
 }

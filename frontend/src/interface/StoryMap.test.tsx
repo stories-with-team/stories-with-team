@@ -14,7 +14,8 @@ it('Add detail', () => {
 })
 it('Create a new story map', () => {
   const story2 = newStory('foo')
-  const storyMap = newStoryMap([story, story2])
+  const storyMap = newStoryMap('aaa', [story, story2])
+  expect(storyMap.title).toBe('aaa')
   expect(storyMap.storyList).toHaveLength(2)
   expect(storyMap.storyList[0]).toEqual(story)
   expect(storyMap.storyList[1]).toEqual(story2)

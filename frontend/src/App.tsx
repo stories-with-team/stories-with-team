@@ -20,6 +20,7 @@ const App: React.FC = () => {
   const storyMap: StoryMap = markdown2storyMap(md)
   return (
     <div className="App">
+      <h1>{storyMap.title}</h1>
       <StoryBoard storyMap={storyMap}/>
     </div>
   );

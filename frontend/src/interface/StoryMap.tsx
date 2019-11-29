@@ -1,16 +1,16 @@
 
 export interface StoryActivity {
-    description: string
+  description: string
 }
 export interface StoryDetail {
-    description: string
+  description: string
 }
 
 export interface Story {
-    activity: StoryActivity
-    details: StoryDetail[]
+  activity: StoryActivity
+  details: StoryDetail[]
 }
 
 export interface StoryMap{
-    storyList: Story[]
+  storyList: Story[]
 }

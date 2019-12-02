@@ -1,15 +1,13 @@
 import {StoryMap, Story, newStory, addDetail, newStoryMap} from '../interface/StoryMap'
 
 class MdLine {
-  private _type: string
   constructor(private text: string) {
-    this._type = this.constructor.name
   }
   lineText(): string {
     return this.text.trim()
   }
   type(): string {
-    return this._type
+    return "MdLine"
   }
 }
 
@@ -19,6 +17,9 @@ class MdHeadLine extends MdLine {
   }
   level(): number {
     return this._level
+  }
+  type(): string {
+    return "MdHeadLine"
   }
 }
 

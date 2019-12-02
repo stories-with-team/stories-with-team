@@ -16,7 +16,7 @@ if(process.env['ENV'] == 'dev') {
     next();
   });
 }
-
+app.use(express.static('../frontend/build'));
 app.get(`${base}/story-map-as-markdown`, (req, res) => {
   readfile(path.join(__dirname, '../story-map.md'))
     .then(data => {

@@ -6,7 +6,7 @@ import StoryBoard from './components/StoryBoard'
 import {markdown2storyMap} from './lib/md2storyMap'
 
 const App: React.FC = () => {
-  const { isLoading, data } = useFetch("http://localhost:8080/api/v1/story-map-as-markdown", {
+  const { isLoading, data } = useFetch("/api/v1/story-map-as-markdown", {
     formatter: (response) => response.text()
   })
 

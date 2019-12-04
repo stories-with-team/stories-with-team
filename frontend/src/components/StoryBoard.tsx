@@ -57,13 +57,16 @@ type StoryBoardProps = {
 const StoryBoard: React.SFC<StoryBoardProps> = (props) => {
   const {storyMap}= props
   return (
-    <div className="storyboard">
-      {
-        storyMap.storyList.map(story =>
-          <StoryBag story={story} key={story.id}/>
-        )
-      }
-    </div>
+    <React.Fragment>
+      <h1>{storyMap.title}</h1>
+      <div className="storyboard">
+        {
+          storyMap.storyList.map(story =>
+            <StoryBag story={story} key={story.id}/>
+          )
+        }
+      </div>
+    </React.Fragment>
   );
 }
 

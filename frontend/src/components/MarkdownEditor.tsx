@@ -12,7 +12,7 @@ const MarkdownEditor = (props: Props) => {
   return (
     <React.Fragment>
       <h1>Markdown Editor</h1>
-      <textarea className="editor" value={content} onChange={contentUpdated} />
+      <textarea value={content} onChange={contentUpdated} />
     </React.Fragment>
   )
 }

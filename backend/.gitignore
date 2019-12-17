@@ -137,3 +137,5 @@ typings/
 .next
 
 /dist
+
+/story-map.md

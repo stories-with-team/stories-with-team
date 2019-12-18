@@ -25,7 +25,8 @@ async function prepareMarkdownFile() {
 
   // File does not exist, so File is needed to copy.
   const needsCopy = typeof stats === "undefined"
-  await copyFile(path.join(__dirname, '../story-map-template.md'), path.join(__dirname, '../story-map.md'))
+  if(needsCopy)
+    await copyFile(storyMapTemplateFilePath, storyMapFilePath)
 }
 async function saveMarkdown(markdown: string) {
   await writeFile(path.join(__dirname, '../story-map.md'), markdown, 'utf8')

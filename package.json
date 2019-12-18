@@ -1,0 +1,23 @@
+{
+  "name": "stories-with-team",
+  "version": "0.2.0-0",
+  "description": "Another story map tool. Main sources exists in frontend and backend directoies. This package.json is for maintainance tools.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stories-with-team/stories-with-team.git"
+  },
+  "keywords": [
+    "storymap",
+    "userstory"
+  ],
+  "author": "Hirofumi Arimoto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stories-with-team/stories-with-team/issues"
+  },
+  "homepage": "https://github.com/stories-with-team/stories-with-team#readme"
+}

@@ -11,6 +11,9 @@ const stat = promisify(fs.stat)
 const copyFile = promisify(fs.copyFile)
 const writeFile = promisify(fs.writeFile)
 
+const storyMapFilePath = path.join(__dirname, '../story-map.md')
+const storyMapTemplateFilePath = path.join(__dirname, '../story-map-template.md')
+
 
 if(process.env['ENV'] == 'dev') {
   console.log("In development mode, allow cors")
@@ -21,7 +24,7 @@ if(process.env['ENV'] == 'dev') {
   });
 }
 async function prepareMarkdownFile() {
-  const stats = await stat(path.join(__dirname, '../story-map.md')).catch(() => void 0)
+  const stats = await stat(storyMapFilePath).catch(() => void 0)
 
   // File does not exist, so File is needed to copy.
   const needsCopy = typeof stats === "undefined"
@@ -29,7 +32,7 @@ async function prepareMarkdownFile() {
     await copyFile(storyMapTemplateFilePath, storyMapFilePath)
 }
 async function saveMarkdown(markdown: string) {
-  await writeFile(path.join(__dirname, '../story-map.md'), markdown, 'utf8')
+  await writeFile(storyMapFilePath, markdown, 'utf8')
   console.log("Markdown saved")
 }
 
@@ -39,7 +42,7 @@ async function main() {
   app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
   app.use(express.static('../frontend/build'));
   app.get(`${base}/story-map-as-markdown`, (req, res) => {
-    readfile(path.join(__dirname, '../story-map.md'))
+    readfile(storyMapFilePath)
       .then(data => {
         res
           .contentType('text/plain')

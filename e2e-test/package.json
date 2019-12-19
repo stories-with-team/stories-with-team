@@ -2,12 +2,16 @@
   "name": "e2e-test",
   "version": "0.1.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:dev-open": "cross-env CYPRESS_baseUrl=http://localhost:3000/ cypress open"
+  },
   "keywords": [],
   "license": "MIT",
   "description": "",
   "dependencies": {},
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "cypress": "^3.7.0"
   }
 }

@@ -20,7 +20,7 @@ function saveMarkdown(md: string) {
 const App: React.FC = () => {
   const [markdown, setMarkdown] = useState(undefined as string | undefined)
 
-  const { isLoading, data } = useFetch("/api/v1/story-map-as-markdown", {
+  const { isLoading } = useFetch("/api/v1/story-map-as-markdown", {
     formatter: async (response) => {
       const text = await response.text()
       setMarkdown(text)

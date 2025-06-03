@@ -4,7 +4,6 @@ import React from 'react';
 import { tv } from 'tailwind-variants';
 
 import {StoryMap, Story, StoryDetail} from '@/interface/StoryMap'
-import './StoryBoard.css'
 
 type DetailBagProps = {
   detail: StoryDetail
@@ -21,19 +20,31 @@ type StoryBagProps = {
 }
 
 const storyBox = tv({
-  base: 'm-[5px] p-[5px] text-left text-sm h-[70px] overflow-y-auto'
+  base: 'm-[5px] p-[5px] text-left text-sm h-[70px] overflow-y-auto drop-shadow-[3px_3px_2px_rgba(0,0,0,0.6)]',
+})
+
+const storyActivity = tv({
+  base: 'bg-[#f8ffb8]',
+})
+
+const storyDetail= tv({
+  base: 'bg-[#ffb7ae]',
+})
+
+const storyBag = tv({
+  base: 'w-[150px] min-w-[150px]',
 })
 
 function StoryBag(props: StoryBagProps) {
   const {story} = props
   return (
-    <div className="story-bag">
-      <div className="story-box story-activity">
+    <div className={storyBag()}>
+      <div className={`${storyBox()} ${storyActivity()}`}>
         <StoryCard text={story.activity.description} />
       </div>
       <div>
       {story.details.map(detail =>
-        <div className={`${storyBox()} story-detail`} key={detail.id}>
+        <div className={`${storyBox()} ${storyDetail()}`} key={detail.id}>
           {<DetailBag detail={detail} />}
         </div>
       )}
@@ -62,12 +73,16 @@ type StoryBoardProps = {
   storyMap: StoryMap
 }
 
+const storyBoard = tv({
+  base: 'flex overflow-x-auto'
+})
+
 function StoryBoard(props: StoryBoardProps) {
   const {storyMap}= props
   return (
     <React.Fragment>
       <h1>{storyMap.title}</h1>
-      <div className="storyboard">
+      <div className={storyBoard()}>
         {
           storyMap.storyList.map(story =>
             <StoryBag story={story} key={story.id}/>

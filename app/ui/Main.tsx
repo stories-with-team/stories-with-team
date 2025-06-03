@@ -4,15 +4,18 @@ import React, {useState} from 'react'
 import StoryBoard from './StoryBoard'
 import MarkdownEditor from './MarkdownEditor'
 import {markdown2storyMap} from '@/lib/md2storyMap'
-import './Main.css'
 import NoteIcon from '@mui/icons-material/Note';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
+import { tv } from 'tailwind-variants';
 
 type Props = {
   markdown: string,
   onChange: (markdown: string) => void
 }
 
+const toolbar = tv({
+  base: 'fixed top-0 left-0 bottom-0 w-[47px] pt-[10px] text-[#ff6f6f] bg-[#ffcca2] shadow-[3px_0px_3px_rgba(0,0,0,0.6)]',
+})
 
 const Main = (props: Props) => {
   const {markdown, onChange} = props
@@ -22,18 +25,18 @@ const Main = (props: Props) => {
     const storyMap = markdown2storyMap(markdown)
   return (
     <React.Fragment>
-      <div className="toolbar">
+      <div className={toolbar()}>
         <div onClick={toStoryboardMode}>
-          <NoteIcon fontSize="large" className="toolbar-icon"/>
+          <NoteIcon fontSize="large" className="cursor-pointer"/>
         </div>
         <div onClick={toMarkdownMode}>
-          <KeyboardIcon fontSize="large" className="toolbar-icon"/>
+          <KeyboardIcon fontSize="large" className="cursor-pointer"/>
         </div>
       </div>
       {
         mode === "storyboard" ?
-          (<div className="main"><StoryBoard storyMap={storyMap}/></div>) :
-          (<div className="main"><MarkdownEditor content={markdown} onChange={onChange}/></div>)
+          (<div className="ml-[50px]"><StoryBoard storyMap={storyMap}/></div>) :
+          (<div className="ml-[50px]"><MarkdownEditor content={markdown} onChange={onChange}/></div>)
       }
     </React.Fragment>
   )

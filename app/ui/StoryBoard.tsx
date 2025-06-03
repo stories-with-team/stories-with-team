@@ -1,8 +1,9 @@
 'use client'
 
 import React from 'react';
-import {StoryMap, Story, StoryDetail} from '@/interface/StoryMap'
+import { tv } from 'tailwind-variants';
 
+import {StoryMap, Story, StoryDetail} from '@/interface/StoryMap'
 import './StoryBoard.css'
 
 type DetailBagProps = {
@@ -19,6 +20,10 @@ type StoryBagProps = {
   story: Story
 }
 
+const storyBox = tv({
+  base: 'm-[5px] p-[5px] text-left text-sm h-[70px] overflow-y-auto'
+})
+
 function StoryBag(props: StoryBagProps) {
   const {story} = props
   return (
@@ -28,7 +33,7 @@ function StoryBag(props: StoryBagProps) {
       </div>
       <div>
       {story.details.map(detail =>
-        <div className="story-box story-detail" key={detail.id}>
+        <div className={`${storyBox()} story-detail`} key={detail.id}>
           {<DetailBag detail={detail} />}
         </div>
       )}

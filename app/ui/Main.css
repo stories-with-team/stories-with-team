@@ -17,3 +17,25 @@
 .main {
   margin-left: 50px;
 }
+
+.save-message {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Example: Style for success (you might want to change this dynamically) */
+.save-message { /* General style, specific styles can be added via className based on success/error */
+  background-color: #e6fffa; /* A light teal/green for success */
+  color: #00796b; /* Darker teal/green text */
+  border: 1px solid #00796b;
+}
+
+/* Example: Style for error */
+/* .save-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #c62828;
+} */

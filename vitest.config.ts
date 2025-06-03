@@ -22,13 +22,30 @@ export default defineConfig({
         test: {
           name: 'storybook',
           browser: {
-        enabled: true,
-        headless: true,
-        provider: 'playwright',
-        instances: [{ browser: 'chromium' }]
-      },
+            enabled: true,
+            headless: true,
+            provider: 'playwright',
+            instances: [{ browser: 'chromium' }]
+          },
           setupFiles: ['.storybook/vitest.setup.ts'],
         },
+        resolve: {
+           alias: {
+            '@': path.resolve(__dirname, '.')
+          },
+        }
+      },
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['**/*.test.ts', '**/*.test.tsx'],
+        },
+        resolve: {
+           alias: {
+            '@': path.resolve(__dirname, '.')
+          },
+        }
       },
     ],
   },

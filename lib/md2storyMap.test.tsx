@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import {markdown2storyMap} from './md2storyMap'
 
 it('convert markdown to story map', () => {

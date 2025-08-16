@@ -81,13 +81,17 @@ function StoryBoard(props: StoryBoardProps) {
   const {storyMap}= props
   return (
     <React.Fragment>
-      <h1>{storyMap.title}</h1>
-      <div className={storyBoard()}>
-        {
-          storyMap.storyList.map(story =>
-            <StoryBag story={story} key={story.id}/>
-          )
-        }
+      <div className='w-full flex justify-center'>
+        <h1 className='text-2xl font-bold'>{storyMap.title}</h1>
+      </div>
+      <div className='w-full flex justify-center'>
+        <div className={storyBoard()}>
+          {
+            storyMap.storyList.map(story =>
+              <StoryBag story={story} key={story.id}/>
+            )
+          }
+        </div>
       </div>
     </React.Fragment>
   );

@@ -1,17 +1,34 @@
-export async function GET() {
-  const json = {
-    storyboard: `
-    # Another Story Map Tool
-    ## Create a story map
-    ### You can write a story map by a story board
-    ### You can write a story map as a markdown
-    ## Show your stories
-    ### You can see a story map by a story board
-    ### You can see a story map as a markdown
-    ## Share your stories
-    ### You can share the stories by markdown.
-    `.trim().split(/\n/).map(line => line.trim()).join('\n')
-  }
+import fs from 'node:fs'
 
-  return Response.json(json)
+async function loadMarkdown() {
+  try {
+    return await fs.promises.readFile('data/storyboard.md', { encoding: 'utf8' })
+  } catch(error: any) {
+    return await fs.promises.readFile('data/initial-storyboard.md', { encoding: 'utf8' })  
+  }
+}
+
+async function saveMarkdown(markdown: string) {
+  await fs.promises.writeFile('data/storyboard.md', markdown)
+}
+
+export async function GET() {
+  const markdown = await loadMarkdown()
+  return Response.json({
+    storyboard: markdown
+  })
+}
+
+export async function POST(request: Request) {
+  const body = await request.json()
+  const markdown = body.storyboard
+  if(typeof markdown !== 'string') {
+    return Response.json({
+      error: "markdown is not string"
+    }, {
+      status: 400
+    })
+  }
+  await saveMarkdown(markdown)
+  return Response.json(body)
 }

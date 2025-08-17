@@ -34,6 +34,7 @@ const toLine = (lineText: string) => {
 }
 
 export function markdown2storyMap(markdown: string): StoryMap {
+  console.log(markdown)
   const mdLineList: MdLine[] = markdown.split('\n').map(toLine)
 
 

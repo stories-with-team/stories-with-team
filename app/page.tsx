@@ -1,24 +1,25 @@
 'use client'
 
-import { useState } from 'react';
+import useSWR from 'swr'
 import Main from './ui/Main';
 import './App.css'
+import { fetcher } from '@/lib/fetcher';
+
 
 export default function Home() {
-  const initialMarkdown = `# Another Story Map Tool
-## Create a story map
-### You can write a story map by a story board
-### You can write a story map as a markdown
-## Show your stories
-### You can see a story map by a story board
-### You can see a story map as a markdown
-## Share your stories
-### You can share the stories by markdown.
-`;
+  const { data, mutate: setMarkdown, error, isLoading } = useSWR<{storyboard: string}>(
+    '/api/contents',
+    fetcher
+  )
 
-  const [markdown, setMarkdown] = useState(initialMarkdown)
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error: {error.message}</div>
+
+  function handleChange(storyboard: string) {
+    setMarkdown({storyboard})
+  }
 
   return (
-    <Main markdown={markdown} onChange={setMarkdown}/>
+    <Main markdown={data?.storyboard} onChange={handleChange}/>
   );
 }

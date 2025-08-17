@@ -9,7 +9,7 @@ import KeyboardIcon from '@mui/icons-material/Keyboard';
 import { tv } from 'tailwind-variants';
 
 type Props = {
-  markdown: string,
+  markdown: string|undefined,
   onChange: (markdown: string) => void
 }
 

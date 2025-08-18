@@ -1,61 +1,56 @@
 import {StoryMap, Story, newStory, addDetail, newStoryMap} from '../interface/StoryMap'
 
-class MdLine {
-  constructor(private text: string) {
-  }
-  lineText(): string {
-    return this.text.trim()
-  }
-  type(): string {
-    return "MdLine"
-  }
+type MdLine = {
+  lineTextRaw: string
+  lineText: string
+  type: 'MdLine'
 }
 
-class MdHeadLine extends MdLine {
-  constructor(text: string, private _level: number) {
-    super(text)
-  }
-  level(): number {
-    return this._level
-  }
-  type(): string {
-    return "MdHeadLine"
-  }
+type MdHeadLine = {
+  lineTextRaw: string
+  lineText: string
+  level: number
+  type: 'MdHeadLine'
 }
 
-const toLine = (lineText: string) => {
+function toLine(lineTextRaw: string) {
   let result: RegExpExecArray | null
-  if((result = /^(#+)(.*)$/.exec(lineText)) !== null) {
+  if((result = /^(#+)(.*)$/.exec(lineTextRaw)) !== null) {
     const level = result[1].length
     const text = result[2]
-    return new MdHeadLine(text, level)
+    return { type: 'MdHeadLine', level, lineText: text.trim(), lineTextRaw} as const satisfies MdHeadLine
   }
-  return new MdLine(lineText)
+  return { type: 'MdLine', lineText: lineTextRaw, lineTextRaw} as const satisfies MdLine
 }
 
 export function markdown2storyMap(markdown: string): StoryMap {
-  console.log(markdown)
-  const mdLineList: MdLine[] = markdown.split('\n').map(toLine)
+  const mdLineList: (MdLine | MdHeadLine)[] = markdown.split('\n').map(toLine)
 
+  const patterns: {[key: string]: ((title: string, stories: Story[], mdLine: MdLine | MdHeadLine) => [string, Story[]])} = {
+    MdLine(title: string, stories: Story[], mdLine: MdLine | MdHeadLine) {
+      if (mdLine.type !== 'MdLine')
+        throw new Error("mdLine should be MdLine"
+      )
 
-  const patterns: {[key: string]: ((title: string, stories: Story[], mdLine: MdLine) => [string, Story[]])} = {
-    MdLine(title: string, stories: Story[], mdLine: MdLine) {
       // TODO: Ignoring
       return [title, stories]
     },
-    MdHeadLine(title: string, stories: Story[], mdLine: MdLine) {
-      const mdHeadLine = mdLine as MdHeadLine
-      const level = mdHeadLine.level()
+    MdHeadLine(title: string, stories: Story[], mdLine: MdLine | MdHeadLine) {
+      if (mdLine.type !== 'MdHeadLine')
+        throw new Error("mdLine should be MdHeadLine"
+      )
+      const mdHeadLine = mdLine
+      const level = mdHeadLine.level
       if(level === 1) {
-        return [mdHeadLine.lineText(), stories]
+        return [mdHeadLine.lineText, stories]
       } else if(level === 2) {
         // New Story
-        return [title, [...stories, newStory(mdHeadLine.lineText())]]
+        return [title, [...stories, newStory(mdHeadLine.lineText)]]
       } else if(level === 3) {
         if(stories.length === 0)
           throw new Error("Adding a detail for empty stories")
         const story = stories[stories.length - 1]
-        return [title, [...stories.slice(0, -1), addDetail(story, mdHeadLine.lineText())]]
+        return [title, [...stories.slice(0, -1), addDetail(story, mdHeadLine.lineText)]]
       } else {
         return [title, stories]
       }
@@ -63,7 +58,7 @@ export function markdown2storyMap(markdown: string): StoryMap {
   }
   const [title, stories] =
     mdLineList.reduce(([title, stories], mdLine) =>
-      patterns[mdLine.type()](title, stories, mdLine)
+      patterns[mdLine.type](title, stories, mdLine)
     ,
     ['' , []] as [string, Story[]]);
   return newStoryMap(title, stories)

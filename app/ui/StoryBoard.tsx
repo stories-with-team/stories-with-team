@@ -3,7 +3,7 @@
 import React from 'react';
 import { tv } from 'tailwind-variants';
 
-import {StoryMap, Story, StoryDetail} from '@/interface/StoryMap'
+import {StoryMap, Story, StoryDetail, StoryActivity} from '@/interface/StoryMap'
 
 type DetailBagProps = {
   detail: StoryDetail
@@ -15,12 +15,21 @@ function DetailBag(props: DetailBagProps) {
   )
 }
 
+export type SelectedElement = {
+  type: 'activity'
+  target: StoryActivity
+} | {
+  type: 'detail'
+  target: StoryDetail
+}
+
 type StoryBagProps = {
   story: Story
+  onSelect: (elem: SelectedElement) => void
 }
 
 const storyBox = tv({
-  base: 'm-[5px] p-[5px] text-left text-sm h-[70px] overflow-y-auto drop-shadow-[3px_3px_2px_rgba(0,0,0,0.6)]',
+  base: 'm-[5px] p-[5px] text-left text-sm h-[70px] overflow-y-auto drop-shadow-[3px_3px_2px_rgba(0,0,0,0.6)] cursor-pointer',
 })
 
 const storyActivity = tv({
@@ -36,15 +45,19 @@ const storyBag = tv({
 })
 
 function StoryBag(props: StoryBagProps) {
-  const {story} = props
+  const {story, onSelect} = props
   return (
     <div className={storyBag()}>
-      <div className={`${storyBox()} ${storyActivity()}`}>
+      <div
+        className={`${storyBox()} ${storyActivity()}`}
+        onClick={() => onSelect({type: 'activity', target: story.activity})}>
         <StoryCard text={story.activity.description} />
       </div>
       <div>
       {story.details.map(detail =>
-        <div className={`${storyBox()} ${storyDetail()}`} key={detail.id}>
+        <div
+          className={`${storyBox()} ${storyDetail()}`} key={detail.id}
+          onClick={() => onSelect({type: 'detail', target: detail})}>
           {<DetailBag detail={detail} />}
         </div>
       )}
@@ -71,6 +84,7 @@ function StoryCard(props: StoryCardProps) {
 
 type StoryBoardProps = {
   storyMap: StoryMap
+  onSelect: (elem: SelectedElement) => void
 }
 
 const storyBoard = tv({
@@ -78,7 +92,7 @@ const storyBoard = tv({
 })
 
 function StoryBoard(props: StoryBoardProps) {
-  const {storyMap}= props
+  const {storyMap, onSelect}= props
   return (
     <React.Fragment>
       <div className='w-full flex justify-center'>
@@ -88,7 +102,7 @@ function StoryBoard(props: StoryBoardProps) {
         <div className={storyBoard()}>
           {
             storyMap.storyList.map(story =>
-              <StoryBag story={story} key={story.id}/>
+              <StoryBag story={story} onSelect={onSelect} key={story.id}/>
             )
           }
         </div>

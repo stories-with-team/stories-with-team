@@ -22,15 +22,22 @@ const Main = (props: Props) => {
   const {markdown, onChange} = props
   const [mode, setMode] = useState("storyboard");
   const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
+  const [editorError, setEditorError] = useState(false)
 
-  const toStoryboardMode = () => { setMode("storyboard") }
-  const toMarkdownMode = () => { setMode("markdown") }
-    const storyMap = markdown2storyMap(markdown)
+  function toStoryboardMode() {
+    if(editorError)
+      return
+    setMode("storyboard")
+  }
+  function toMarkdownMode() {
+    setMode("markdown")
+  }
+  const storyMap = markdown2storyMap(markdown)
   return (
     <React.Fragment>
       <div className={toolbar()}>
         <div onClick={toStoryboardMode}>
-          <NoteIcon fontSize="large" className="cursor-pointer"/>
+          <NoteIcon fontSize="large" className={editorError ? 'cursor-not-allowed' : 'cursor-pointer'}/>
         </div>
         <div onClick={toMarkdownMode}>
           <KeyboardIcon fontSize="large" className="cursor-pointer"/>
@@ -42,7 +49,7 @@ const Main = (props: Props) => {
             <StoryBoard storyMap={storyMap} onSelect={setSelectedElement}/>
           </div>) :
           (<div className="ml-[50px]">
-            <MarkdownEditor content={markdown} onChange={onChange}/>
+            <MarkdownEditor content={markdown} onChange={onChange} onErrorStateChange={setEditorError}/>
           </div>)
       }
       {

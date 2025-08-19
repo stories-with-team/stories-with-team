@@ -1,21 +1,21 @@
 import { nanoid } from 'nanoid'
-interface WithId {
+type WithId = {
   id: string
 }
 
-export interface StoryActivity extends WithId {
+export type StoryActivity = WithId & {
   description: string
 }
-export interface StoryDetail extends WithId {
+export type StoryDetail = WithId & {
   description: string
 }
 
-export interface Story extends WithId {
+export type Story = WithId & {
   activity: StoryActivity
   details: StoryDetail[]
 }
 
-export interface StoryMap{
+export type StoryMap = {
   title: string
   storyList: Story[]
 }

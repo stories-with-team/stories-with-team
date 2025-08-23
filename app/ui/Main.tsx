@@ -35,7 +35,7 @@ const Main = (props: Props) => {
   const storyMap = markdown2storyMap(markdown)
   return (
     <React.Fragment>
-      <div className={toolbar()}>
+      <div className={toolbar()} role="toolbar">
         <div onClick={toStoryboardMode}>
           <NoteIcon fontSize="large" className={editorError ? 'cursor-not-allowed' : 'cursor-pointer'}/>
         </div>

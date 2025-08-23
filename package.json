@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "test": "vitest",
+    "test:e2e": "playwright test e2e/",
+    "test:e2e:ui": "playwright test --ui",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -22,6 +24,7 @@
     "@emotion/styled": "^11.14.0",
     "@eslint/eslintrc": "^3",
     "@mui/icons-material": "^7.1.0",
+    "@playwright/test": "^1.55.0",
     "@storybook/addon-a11y": "^9.0.4",
     "@storybook/addon-docs": "^9.0.4",
     "@storybook/addon-onboarding": "^9.0.4",

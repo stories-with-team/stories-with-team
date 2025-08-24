@@ -1,34 +1,62 @@
 'use client'
 
-import useSWR from 'swr'
+
 import Main from './ui/Main';
 import './App.css'
-import { fetcher } from '@/lib/fetcher';
-import { ContentsResponse } from '@/lib/types';
+import { sseFetcher } from '@/lib/fetcher';
+import { useEffect, useState } from 'react';
 
 
-const URL = '/api/contents'
+const URL = '/api/contents';
 function useMarkdown() {
-  const { data, mutate, error, isLoading } = useSWR<ContentsResponse>(
-    URL,
-    fetcher
-  )
+  const [markdown, setMarkdown] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function update(markdown: string) {
-    mutate({...data, storyboard: markdown}, false)
+  useEffect(() => {
+    let cancelled = false;
+    const sse = sseFetcher(
+      URL,
+      (data) => {
+        if (!cancelled) {
+          setMarkdown(data.storyboard);
+          setIsLoading(false);
+        }
+      },
+      (err: unknown) => {
+        if (!cancelled) {
+          if (err instanceof Error) {
+            console.log('SSE Error:', err, err.stack, err.message, err.cause);
+            setError(err);
+          } else {
+            console.log('SSE Error (unknown):', err);
+            setError(new Error('Unknown SSE error'));
+          }
+          setIsLoading(false);
+        }
+      }
+    );
+    return () => {
+      cancelled = true;
+      sse.close();
+    };
+  }, []);
+
+  async function update(newMarkdown: string) {
+    setMarkdown(newMarkdown);
     await fetch(URL, {
       method: 'POST',
-      body: JSON.stringify({storyboard: markdown})
-    })
-    mutate()
+      body: JSON.stringify({ storyboard: newMarkdown })
+    });
+    // 再取得したい場合は再度SSEで取得する処理を追加可能
   }
 
   return {
-    markdown: data?.storyboard,
+    markdown,
     error,
     isLoading,
     update
-  }
+  };
 }
 
 export default function Home() {

@@ -17,18 +17,18 @@ function MarkdownEditor(props: Props) {
   const {content, onChange, onErrorStateChange} = props
   const [editingContent, setEditingContent] = useState(content) 
   const [hasError, setHasError] = useState(false)
-  const contentUpdated = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value
+  const contentUpdated = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.target.value
     setEditingContent(value)
     try {
       // Throw error if markdown is invalid
       markdown2storyMap(value)
 
-      onChange(e.target.value)
+      onChange(event.target.value)
       setHasError(false)
       if(onErrorStateChange)
         onErrorStateChange(false)
-    } catch(e: unknown) {
+    } catch(_e: unknown) {
       // do nothing
       setHasError(true)
       if(onErrorStateChange)

@@ -3,7 +3,7 @@ import fs from 'node:fs'
 async function loadMarkdown() {
   try {
     return await fs.promises.readFile('data/storyboard.md', { encoding: 'utf8' })
-  } catch(error: any) {
+  } catch(error: unknown) {
     return await fs.promises.readFile('data/initial-storyboard.md', { encoding: 'utf8' })  
   }
 }

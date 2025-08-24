@@ -48,5 +48,6 @@ export const Primary: Story = {
         },
       ],
     },    
+    onSelect: () => {},
   }
 };

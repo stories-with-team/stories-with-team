@@ -56,7 +56,12 @@ const Main = (props: Props) => {
             <StoryBoard storyMap={storyMap} onSelect={setSelectedElement} onDetailOrderChange={handleDetailOrderChange}/>
           </div>) :
           (<div className="ml-[50px]">
-            <MarkdownEditor content={markdown} onChange={onChange} onErrorStateChange={setEditorError}/>
+            <MarkdownEditor 
+              content={markdown} 
+              onChange={onChange} 
+              onErrorStateChange={setEditorError}
+              enableCollaboration={true}
+            />
           </div>)
       }
       {

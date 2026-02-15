@@ -63,3 +63,22 @@ export function markdown2storyMap(markdown: string): StoryMap {
     ['' , []] as [string, Story[]]);
   return newStoryMap(title, stories)
 }
+
+export function storyMap2markdown(storyMap: StoryMap): string {
+  const lines: string[] = []
+  
+  // Add title
+  if (storyMap.title) {
+    lines.push(`# ${storyMap.title}`)
+  }
+  
+  // Add stories
+  storyMap.storyList.forEach(story => {
+    lines.push(`## ${story.activity.description}`)
+    story.details.forEach(detail => {
+      lines.push(`### ${detail.description}`)
+    })
+  })
+  
+  return lines.join('\n')
+}

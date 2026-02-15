@@ -3,11 +3,12 @@
 import React, {useState} from 'react'
 import StoryBoard, { SelectedElement } from './StoryBoard'
 import MarkdownEditor from './MarkdownEditor'
-import {markdown2storyMap} from '@/lib/md2storyMap'
+import {markdown2storyMap, storyMap2markdown} from '@/lib/md2storyMap'
 import NoteIcon from '@mui/icons-material/Note';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import CloseIcon from '@mui/icons-material/Close';
 import { tv } from 'tailwind-variants';
+import { Story, StoryMap } from '@/interface/StoryMap'
 
 type Props = {
   markdown: string,
@@ -32,6 +33,12 @@ const Main = (props: Props) => {
   function toMarkdownMode() {
     setMode("markdown")
   }
+
+  const handleDetailOrderChange = (newStoryMap: StoryMap) => {
+    const newMarkdown = storyMap2markdown(newStoryMap)
+    onChange(newMarkdown)
+  }
+
   const storyMap = markdown2storyMap(markdown)
   return (
     <React.Fragment>
@@ -46,7 +53,7 @@ const Main = (props: Props) => {
       {
         mode === "storyboard" ?
           (<div className="ml-[50px]">
-            <StoryBoard storyMap={storyMap} onSelect={setSelectedElement}/>
+            <StoryBoard storyMap={storyMap} onSelect={setSelectedElement} onDetailOrderChange={handleDetailOrderChange}/>
           </div>) :
           (<div className="ml-[50px]">
             <MarkdownEditor content={markdown} onChange={onChange} onErrorStateChange={setEditorError}/>

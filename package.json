@@ -36,6 +36,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser": "^4.1.10",
+    "@vitest/browser-playwright": "^4.1.11",
     "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^9",
     "eslint-config-next": "15.4.6",

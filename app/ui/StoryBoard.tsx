@@ -60,12 +60,13 @@ type StoryBagProps = {
   onDragStoryStart: (storyId: string) => void
   onDragStoryEnd: () => void
   draggingStoryId: string | null
-  onStoryDrop: (sourceStoryId: string, targetStoryId: string) => void
+  onStoryDrop: (sourceStoryId: string, targetStoryId: string, position: 'before' | 'after') => void
 }
 
 function StoryBag(props: StoryBagProps) {
   const { story, onSelect, onDragDetailStart, onDragDetailEnd, draggingDetailId, onDetailDrop, onDragStoryStart, onDragStoryEnd, draggingStoryId, onStoryDrop } = props
   const [isDropTarget, setIsDropTarget] = useState(false)
+  const [dropPosition, setDropPosition] = useState<'before' | 'after'>('before')
 
   const handleActivityDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer!.effectAllowed = 'move'
@@ -78,12 +79,17 @@ function StoryBag(props: StoryBagProps) {
     e.dataTransfer!.dropEffect = 'move'
     if (draggingDetailId || draggingStoryId) {
       setIsDropTarget(true)
+      if (draggingStoryId) {
+        const bounds = e.currentTarget.getBoundingClientRect()
+        setDropPosition(e.clientX < bounds.left + bounds.width / 2 ? 'before' : 'after')
+      }
     }
   }
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     setIsDropTarget(false)
+    setDropPosition('before')
   }
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -96,7 +102,7 @@ function StoryBag(props: StoryBagProps) {
 
     if (storyId && !detailId) {
       if (storyId !== story.id) {
-        onStoryDrop(storyId, story.id)
+        onStoryDrop(storyId, story.id, dropPosition)
       }
       onDragStoryEnd()
     } else if (detailId && sourceStoryId) {
@@ -104,6 +110,7 @@ function StoryBag(props: StoryBagProps) {
     }
 
     setIsDropTarget(false)
+    setDropPosition('before')
     onDragDetailEnd()
   }
 
@@ -117,7 +124,8 @@ function StoryBag(props: StoryBagProps) {
       className={cn(
         'w-[170px] min-w-[170px] transition-opacity duration-200',
         draggingStoryId === story.id && 'opacity-50',
-        isDropTarget && 'rounded-lg border-2 border-primary/60',
+        isDropTarget && dropPosition === 'before' && 'border-l-2 border-primary/60 pl-2',
+        isDropTarget && dropPosition === 'after' && 'border-r-2 border-primary/60 pr-2',
       )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -228,7 +236,7 @@ function StoryBoard(props: StoryBoardProps) {
     onDetailOrderChange?.(newStoryMap)
   }
 
-  const handleStoryDrop = (sourceStoryId: string, targetStoryId: string) => {
+  const handleStoryDrop = (sourceStoryId: string, targetStoryId: string, position: 'before' | 'after') => {
     const sourceIndex = storyMap.storyList.findIndex((s) => s.id === sourceStoryId)
     const targetIndex = storyMap.storyList.findIndex((s) => s.id === targetStoryId)
 
@@ -236,7 +244,9 @@ function StoryBoard(props: StoryBoardProps) {
 
     const newStoryList = [...storyMap.storyList]
     const [removed] = newStoryList.splice(sourceIndex, 1)
-    newStoryList.splice(targetIndex, 0, removed)
+    const adjustedTargetIndex = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex
+    const insertIndex = position === 'after' ? adjustedTargetIndex + 1 : adjustedTargetIndex
+    newStoryList.splice(insertIndex, 0, removed)
 
     const newStoryMap: StoryMap = {
       ...storyMap,

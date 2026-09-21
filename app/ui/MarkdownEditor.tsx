@@ -15,6 +15,7 @@ function MarkdownEditor(props: Props) {
   const { content, onChange, onErrorStateChange } = props
   const [editingContent, setEditingContent] = useState(content)
   const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const contentUpdated = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value
@@ -23,9 +24,11 @@ function MarkdownEditor(props: Props) {
       markdown2storyMap(value)
       onChange(value)
       setHasError(false)
+      setErrorMessage('')
       if (onErrorStateChange) onErrorStateChange(false)
-    } catch (_e: unknown) {
+    } catch (error: unknown) {
       setHasError(true)
+      setErrorMessage(error instanceof Error ? error.message : 'Unknown markdown error')
       if (onErrorStateChange) onErrorStateChange(true)
     }
   }
@@ -42,7 +45,12 @@ function MarkdownEditor(props: Props) {
           className="min-h-[20rem] resize-y bg-background font-mono text-sm leading-6"
           placeholder="Write your storyboard markdown here..."
         />
-        {hasError && <p className="text-sm font-medium text-destructive">Markdown is invalid.</p>}
+        {hasError && (
+          <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive" role="alert">
+            <p className="font-medium">Markdown is invalid.</p>
+            <p className="mt-1 font-mono text-xs">{errorMessage}</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

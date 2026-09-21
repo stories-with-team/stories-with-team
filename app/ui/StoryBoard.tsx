@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react';
-import { tv } from 'tailwind-variants';
+import React, { useState } from 'react'
+import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
 
-import {StoryMap, Story, StoryDetail, StoryActivity} from '@/interface/StoryMap'
+import { StoryMap, Story, StoryDetail, StoryActivity } from '@/interface/StoryMap'
 
 type DetailBagProps = {
   detail: StoryDetail
@@ -15,7 +16,7 @@ type DetailBagProps = {
 }
 
 function DetailBag(props: DetailBagProps) {
-  const {detail, storyId, onSelect, onDragStart, onDragEnd, isDragging} = props
+  const { detail, storyId, onSelect, onDragStart, onDragEnd, isDragging } = props
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     e.dataTransfer!.effectAllowed = 'move'
@@ -26,7 +27,7 @@ function DetailBag(props: DetailBagProps) {
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
-    onSelect({type: 'detail', target: detail})
+    onSelect({ type: 'detail', target: detail })
   }
 
   return (
@@ -35,19 +36,19 @@ function DetailBag(props: DetailBagProps) {
       onDragStart={handleDragStart}
       onDragEnd={onDragEnd}
       onClick={handleClick}
-      className={`${storyBox()} ${storyDetail()} ${isDragging ? 'opacity-50' : ''} cursor-grab active:cursor-grabbing`}>
+      className={cn(
+        'm-1.5 cursor-grab rounded-lg border border-border bg-secondary/80 p-2.5 text-left text-sm text-foreground shadow-sm transition active:cursor-grabbing',
+        isDragging && 'opacity-50',
+      )}
+    >
       <StoryCard text={detail.description} />
     </div>
   )
 }
 
-export type SelectedElement = {
-  type: 'activity'
-  target: StoryActivity
-} | {
-  type: 'detail'
-  target: StoryDetail
-}
+export type SelectedElement =
+  | { type: 'activity'; target: StoryActivity }
+  | { type: 'detail'; target: StoryDetail }
 
 type StoryBagProps = {
   story: Story
@@ -62,24 +63,8 @@ type StoryBagProps = {
   onStoryDrop: (sourceStoryId: string, targetStoryId: string) => void
 }
 
-const storyBox = tv({
-  base: 'm-[5px] p-[5px] text-left text-sm h-[70px] overflow-y-auto drop-shadow-[3px_3px_2px_rgba(0,0,0,0.6)] cursor-pointer',
-})
-
-const storyActivity = tv({
-  base: 'bg-[#f8ffb8]',
-})
-
-const storyDetail= tv({
-  base: 'bg-[#ffb7ae]',
-})
-
-const storyBag = tv({
-  base: 'w-[150px] min-w-[150px] transition-opacity duration-200',
-})
-
 function StoryBag(props: StoryBagProps) {
-  const {story, onSelect, onDragDetailStart, onDragDetailEnd, draggingDetailId, onDetailDrop, onDragStoryStart, onDragStoryEnd, draggingStoryId, onStoryDrop} = props
+  const { story, onSelect, onDragDetailStart, onDragDetailEnd, draggingDetailId, onDetailDrop, onDragStoryStart, onDragStoryEnd, draggingStoryId, onStoryDrop } = props
   const [isDropTarget, setIsDropTarget] = useState(false)
 
   const handleActivityDragStart = (e: React.DragEvent<HTMLDivElement>) => {
@@ -104,76 +89,79 @@ function StoryBag(props: StoryBagProps) {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    
+
     const storyId = e.dataTransfer!.getData('storyId')
     const detailId = e.dataTransfer!.getData('detailId')
     const sourceStoryId = e.dataTransfer!.getData('sourceStoryId')
-    
+
     if (storyId && !detailId) {
-      // Drop story
       if (storyId !== story.id) {
         onStoryDrop(storyId, story.id)
       }
       onDragStoryEnd()
     } else if (detailId && sourceStoryId) {
-      // Drop detail
       onDetailDrop(detailId, sourceStoryId, story.id)
     }
-    
+
     setIsDropTarget(false)
     onDragDetailEnd()
   }
 
   const handleActivityClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
-    onSelect({type: 'activity', target: story.activity})
+    onSelect({ type: 'activity', target: story.activity })
   }
 
   return (
-    <div 
-      className={`${storyBag()} ${draggingStoryId === story.id ? 'opacity-50' : ''} ${isDropTarget ? 'border-2 border-blue-500 rounded' : ''}`}
+    <div
+      className={cn(
+        'w-[170px] min-w-[170px] transition-opacity duration-200',
+        draggingStoryId === story.id && 'opacity-50',
+        isDropTarget && 'rounded-lg border-2 border-primary/60',
+      )}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      <div
+      <Card
         draggable
         onDragStart={handleActivityDragStart}
         onDragEnd={onDragStoryEnd}
-        className={`${storyBox()} ${storyActivity()} cursor-grab active:cursor-grabbing`}
-        onClick={handleActivityClick}>
+        onClick={handleActivityClick}
+        className={cn(
+          'mb-2 cursor-grab rounded-xl border border-amber-200 bg-amber-50 p-3 shadow-sm active:cursor-grabbing',
+        )}
+      >
         <StoryCard text={story.activity.description} />
-      </div>
+      </Card>
+
       <div>
-      {story.details.map(detail =>
-        <DetailBag 
-          key={detail.id}
-          detail={detail} 
-          storyId={story.id}
-          onSelect={onSelect}
-          onDragStart={onDragDetailStart}
-          onDragEnd={onDragDetailEnd}
-          isDragging={draggingDetailId === detail.id}
-        />
-      )}
+        {story.details.map((detail) => (
+          <DetailBag
+            key={detail.id}
+            detail={detail}
+            storyId={story.id}
+            onSelect={onSelect}
+            onDragStart={onDragDetailStart}
+            onDragEnd={onDragDetailEnd}
+            isDragging={draggingDetailId === detail.id}
+          />
+        ))}
       </div>
-
     </div>
-  );
+  )
 }
 
-type StoryCardProps = {
-  text: string
-}
+type StoryCardProps = { text: string }
 
 function StoryCard(props: StoryCardProps) {
-  const {text} = props
+  const { text } = props
   return (
-    <React.Fragment>
-      {text.split(/\n/).map((line, i) =>
-        <div key={i}>{line}</div>
-      )}
-    </React.Fragment>
+    <div className="space-y-1 text-sm leading-5 text-slate-800">
+      {text.split(/\n/).map((line, i) => (
+        <div key={i}>{line || ' '}</div>
+      ))}
+    </div>
   )
 }
 
@@ -183,16 +171,12 @@ type StoryBoardProps = {
   onDetailOrderChange?: (newStoryMap: StoryMap) => void
 }
 
-const storyBoard = tv({
-  base: 'flex overflow-x-auto'
-})
-
 function StoryBoard(props: StoryBoardProps) {
-  const {storyMap, onSelect, onDetailOrderChange} = props
+  const { storyMap, onSelect, onDetailOrderChange } = props
   const [draggingDetailId, setDraggingDetailId] = useState<string | null>(null)
   const [draggingStoryId, setDraggingStoryId] = useState<string | null>(null)
 
-  const handleDragDetailStart = (detailId: string, sourceStoryId: string) => {
+  const handleDragDetailStart = (detailId: string, _sourceStoryId: string) => {
     setDraggingDetailId(detailId)
   }
 
@@ -211,87 +195,83 @@ function StoryBoard(props: StoryBoardProps) {
   const handleDetailDrop = (detailId: string, sourceStoryId: string, targetStoryId: string) => {
     if (sourceStoryId === targetStoryId) return
 
-    const sourceStoryIndex = storyMap.storyList.findIndex(s => s.id === sourceStoryId)
-    const targetStoryIndex = storyMap.storyList.findIndex(s => s.id === targetStoryId)
-    
+    const sourceStoryIndex = storyMap.storyList.findIndex((s) => s.id === sourceStoryId)
+    const targetStoryIndex = storyMap.storyList.findIndex((s) => s.id === targetStoryId)
+
     if (sourceStoryIndex === -1 || targetStoryIndex === -1) return
 
     const sourceStory = storyMap.storyList[sourceStoryIndex]
     const targetStory = storyMap.storyList[targetStoryIndex]
-    
-    const detailIndex = sourceStory.details.findIndex(d => d.id === detailId)
+
+    const detailIndex = sourceStory.details.findIndex((d) => d.id === detailId)
     if (detailIndex === -1) return
 
     const movedDetail = sourceStory.details[detailIndex]
-    
+
     const newStoryList = [...storyMap.storyList]
-    
-    // Remove detail from source story
+
     newStoryList[sourceStoryIndex] = {
       ...sourceStory,
-      details: sourceStory.details.filter(d => d.id !== detailId)
+      details: sourceStory.details.filter((d) => d.id !== detailId),
     }
-    
-    // Add detail to target story
+
     newStoryList[targetStoryIndex] = {
       ...targetStory,
-      details: [...targetStory.details, movedDetail]
+      details: [...targetStory.details, movedDetail],
     }
 
     const newStoryMap: StoryMap = {
       ...storyMap,
-      storyList: newStoryList
+      storyList: newStoryList,
     }
-    
+
     onDetailOrderChange?.(newStoryMap)
   }
 
   const handleStoryDrop = (sourceStoryId: string, targetStoryId: string) => {
-    const sourceIndex = storyMap.storyList.findIndex(s => s.id === sourceStoryId)
-    const targetIndex = storyMap.storyList.findIndex(s => s.id === targetStoryId)
-    
+    const sourceIndex = storyMap.storyList.findIndex((s) => s.id === sourceStoryId)
+    const targetIndex = storyMap.storyList.findIndex((s) => s.id === targetStoryId)
+
     if (sourceIndex === -1 || targetIndex === -1 || sourceIndex === targetIndex) return
 
     const newStoryList = [...storyMap.storyList]
     const [removed] = newStoryList.splice(sourceIndex, 1)
     newStoryList.splice(targetIndex, 0, removed)
-    
+
     const newStoryMap: StoryMap = {
       ...storyMap,
-      storyList: newStoryList
+      storyList: newStoryList,
     }
-    
+
     onDetailOrderChange?.(newStoryMap)
   }
 
   return (
-    <React.Fragment>
-      <div className='w-full flex justify-center'>
-        <h1 className='text-2xl font-bold'>{storyMap.title}</h1>
+    <div className="mx-auto max-w-6xl space-y-6">
+      <div className="flex justify-center pt-2">
+        <h1 className="text-2xl font-semibold tracking-tight">{storyMap.title}</h1>
       </div>
-      <div className='w-full flex justify-center'>
-        <div className={storyBoard()}>
-          {
-            storyMap.storyList.map(story =>
-              <StoryBag 
-                story={story} 
-                onSelect={onSelect} 
-                key={story.id}
-                onDragDetailStart={handleDragDetailStart}
-                onDragDetailEnd={handleDragDetailEnd}
-                draggingDetailId={draggingDetailId}
-                onDetailDrop={handleDetailDrop}
-                onDragStoryStart={handleDragStoryStart}
-                onDragStoryEnd={handleDragStoryEnd}
-                draggingStoryId={draggingStoryId}
-                onStoryDrop={handleStoryDrop}
-              />
-            )
-          }
+      <div className="overflow-x-auto pb-4">
+        <div className="flex min-h-[420px] items-start gap-4">
+          {storyMap.storyList.map((story) => (
+            <StoryBag
+              story={story}
+              onSelect={onSelect}
+              key={story.id}
+              onDragDetailStart={handleDragDetailStart}
+              onDragDetailEnd={handleDragDetailEnd}
+              draggingDetailId={draggingDetailId}
+              onDetailDrop={handleDetailDrop}
+              onDragStoryStart={handleDragStoryStart}
+              onDragStoryEnd={handleDragStoryEnd}
+              draggingStoryId={draggingStoryId}
+              onStoryDrop={handleStoryDrop}
+            />
+          ))}
         </div>
       </div>
-    </React.Fragment>
-  );
+    </div>
+  )
 }
 
 export default StoryBoard

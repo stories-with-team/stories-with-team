@@ -2,45 +2,50 @@
 
 import { markdown2storyMap } from '@/lib/md2storyMap'
 import React, { useState } from 'react'
-import { tv } from 'tailwind-variants'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 type Props = {
   content: string
   onChange: (content: string) => void
   onErrorStateChange?: (hasError: boolean) => void
 }
 
-const textarea = tv({
-  base: 'w-full h-[15rem] p-[10px] text-sm bg-[#f8f8f8] border border-[#ccc] rounded shadow-md resize-none',
-})
-
 function MarkdownEditor(props: Props) {
-  const {content, onChange, onErrorStateChange} = props
-  const [editingContent, setEditingContent] = useState(content) 
+  const { content, onChange, onErrorStateChange } = props
+  const [editingContent, setEditingContent] = useState(content)
   const [hasError, setHasError] = useState(false)
+
   const contentUpdated = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value
     setEditingContent(value)
     try {
-      // Throw error if markdown is invalid
       markdown2storyMap(value)
-
-      onChange(event.target.value)
+      onChange(value)
       setHasError(false)
-      if(onErrorStateChange)
-        onErrorStateChange(false)
-    } catch(_e: unknown) {
-      // do nothing
+      if (onErrorStateChange) onErrorStateChange(false)
+    } catch (_e: unknown) {
       setHasError(true)
-      if(onErrorStateChange)
-        onErrorStateChange(true)
+      if (onErrorStateChange) onErrorStateChange(true)
     }
   }
+
   return (
-    <React.Fragment>
-      <h1>Markdown Editor</h1>
-      <textarea className={textarea()} value={editingContent} onChange={contentUpdated} />
-      {hasError && <p className="text-red-500">❌ Markdown is invalid</p>}
-    </React.Fragment>
+    <Card className="mx-auto max-w-5xl border-border/60 bg-card/80 shadow-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl">Markdown editor</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <Textarea
+          value={editingContent}
+          onChange={contentUpdated}
+          className="min-h-[20rem] resize-y bg-background font-mono text-sm leading-6"
+          placeholder="Write your storyboard markdown here..."
+        />
+        {hasError && <p className="text-sm font-medium text-destructive">Markdown is invalid.</p>}
+      </CardContent>
+    </Card>
   )
 }
+
 export default MarkdownEditor

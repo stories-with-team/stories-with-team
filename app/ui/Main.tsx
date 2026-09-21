@@ -1,37 +1,32 @@
 'use client'
 
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import StoryBoard, { SelectedElement } from './StoryBoard'
 import MarkdownEditor from './MarkdownEditor'
-import {markdown2storyMap, storyMap2markdown} from '@/lib/md2storyMap'
-import NoteIcon from '@mui/icons-material/Note';
-import KeyboardIcon from '@mui/icons-material/Keyboard';
-import CloseIcon from '@mui/icons-material/Close';
-import { tv } from 'tailwind-variants';
-import { Story, StoryMap } from '@/interface/StoryMap'
+import { markdown2storyMap, storyMap2markdown } from '@/lib/md2storyMap'
+import { NotebookText, Keyboard, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { StoryMap } from '@/interface/StoryMap'
 
 type Props = {
   markdown: string,
   onChange: (markdown: string) => void
 }
 
-const toolbar = tv({
-  base: 'fixed top-0 left-0 bottom-0 w-[47px] pt-[10px] text-[#ff6f6f] bg-[#ffcca2] shadow-[3px_0px_3px_rgba(0,0,0,0.6)]',
-})
-
 const Main = (props: Props) => {
-  const {markdown, onChange} = props
-  const [mode, setMode] = useState("storyboard");
-  const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null);
+  const { markdown, onChange } = props
+  const [mode, setMode] = useState<'storyboard' | 'markdown'>('storyboard')
+  const [selectedElement, setSelectedElement] = useState<SelectedElement | null>(null)
   const [editorError, setEditorError] = useState(false)
 
   function toStoryboardMode() {
-    if(editorError)
-      return
-    setMode("storyboard")
+    if (editorError) return
+    setMode('storyboard')
   }
+
   function toMarkdownMode() {
-    setMode("markdown")
+    setMode('markdown')
   }
 
   const handleDetailOrderChange = (newStoryMap: StoryMap) => {
@@ -40,44 +35,73 @@ const Main = (props: Props) => {
   }
 
   const storyMap = markdown2storyMap(markdown)
+
   return (
-    <React.Fragment>
-      <div className={toolbar()} role="toolbar">
-        <div onClick={toStoryboardMode}>
-          <NoteIcon fontSize="large" className={editorError ? 'cursor-not-allowed' : 'cursor-pointer'}/>
+    <div className="flex min-h-screen bg-background text-foreground">
+      <aside className="flex w-20 shrink-0 border-r bg-muted/40">
+        <div className="flex w-full flex-col items-center gap-3 pt-5">
+          <Button
+            type="button"
+            variant={mode === 'storyboard' ? 'secondary' : 'ghost'}
+            size="icon"
+            className="h-11 w-11 rounded-xl"
+            onClick={toStoryboardMode}
+            disabled={editorError}
+            aria-label="Storyboard mode"
+          >
+            <NotebookText className="h-5 w-5" />
+          </Button>
+          <Button
+            type="button"
+            variant={mode === 'markdown' ? 'secondary' : 'ghost'}
+            size="icon"
+            className="h-11 w-11 rounded-xl"
+            onClick={toMarkdownMode}
+            aria-label="Markdown mode"
+          >
+            <Keyboard className="h-5 w-5" />
+          </Button>
         </div>
-        <div onClick={toMarkdownMode}>
-          <KeyboardIcon fontSize="large" className="cursor-pointer"/>
-        </div>
-      </div>
-      {
-        mode === "storyboard" ?
-          (<div className="ml-[50px]">
-            <StoryBoard storyMap={storyMap} onSelect={setSelectedElement} onDetailOrderChange={handleDetailOrderChange}/>
-          </div>) :
-          (<div className="ml-[50px]">
-            <MarkdownEditor content={markdown} onChange={onChange} onErrorStateChange={setEditorError}/>
-          </div>)
-      }
-      {
-        selectedElement &&
-          <div className='fixed top-0 right-0 bottom-0 w-[300px] bg-[#ffddc2] shadow-[-3px_0px_3px_rgba(0,0,0,0.6)]'>
-            <div className='absolute top-[10px] right-[10px]'>
-              <CloseIcon className='cursor-pointer' onClick={() => setSelectedElement(null)}/>
-            </div>
-            <div className='p-[10px] '>
-              Description
-              <div className='p-[10px] bg-[#fff]'>
-                {
-                  selectedElement.type === "activity" ?
-                    selectedElement.target.description :
-                    selectedElement.target.description
-                }
+      </aside>
+
+      <main className="flex-1 p-6">
+        {mode === 'storyboard' ? (
+          <StoryBoard storyMap={storyMap} onSelect={setSelectedElement} onDetailOrderChange={handleDetailOrderChange} />
+        ) : (
+          <MarkdownEditor content={markdown} onChange={onChange} onErrorStateChange={setEditorError} />
+        )}
+      </main>
+
+      {selectedElement && (
+        <aside className="w-[320px] shrink-0 border-l bg-card/95 backdrop-blur-sm">
+          <Card className="m-4 border-none shadow-none bg-transparent">
+            <CardContent className="relative p-0">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-8 w-8"
+                onClick={() => setSelectedElement(null)}
+                aria-label="Close detail panel"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+
+              <div className="space-y-4 pt-10">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Description</p>
+                </div>
+
+                <div className="rounded-lg border bg-muted/40 p-4 text-sm leading-6 text-foreground">
+                  {selectedElement.target.description}
+                </div>
               </div>
-            </div>
-          </div>
-      }
-    </React.Fragment>
+            </CardContent>
+          </Card>
+        </aside>
+      )}
+    </div>
   )
 }
+
 export default Main

@@ -50,7 +50,7 @@ const Main = (props: Props) => {
   const storyMap = markdown2storyMap(markdown)
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen bg-background text-foreground">
       <main className="min-w-0 p-6">
         <header className="mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-4">
           <div className="min-w-0">
@@ -98,7 +98,7 @@ const Main = (props: Props) => {
       </main>
 
       {selectedElement && (
-        <aside className="w-[320px] shrink-0 border-l bg-card/95 backdrop-blur-sm">
+        <aside className="w-[320px] shrink-0 border-l bg-card/95 backdrop-blur-sm" aria-label="Inspector">
           <Card className="m-4 border-none shadow-none bg-transparent">
             <CardContent className="relative p-0">
               <Button
@@ -114,11 +114,26 @@ const Main = (props: Props) => {
 
               <div className="space-y-4 pt-10">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Description</p>
+                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Inspector</p>
+                  <h2 className="mt-1 text-lg font-semibold">
+                    {selectedElement.type === 'activity' ? 'Activity' : 'Detail'}
+                  </h2>
                 </div>
 
-                <div className="rounded-lg border bg-muted/40 p-4 text-sm leading-6 text-foreground">
+                <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-y py-4 text-sm">
+                  <span className="text-muted-foreground">Type</span>
+                  <span className="text-right font-medium">{selectedElement.type}</span>
+                  <span className="text-muted-foreground">ID</span>
+                  <span className="truncate text-right font-mono text-xs" title={selectedElement.target.id}>
+                    {selectedElement.target.id}
+                  </span>
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm font-medium text-muted-foreground">Description</p>
+                  <div className="rounded-lg border bg-muted/40 p-4 text-sm leading-6 text-foreground">
                   {selectedElement.target.description}
+                  </div>
                 </div>
               </div>
             </CardContent>

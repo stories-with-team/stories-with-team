@@ -50,8 +50,8 @@ const Main = (props: Props) => {
   const storyMap = markdown2storyMap(markdown)
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <main className="min-w-0 p-6">
+    <div className="flex min-h-screen flex-col bg-background text-foreground md:flex-row">
+      <main className={`min-w-0 flex-1 p-4 md:p-6 ${selectedElement ? 'pb-24 md:pb-6' : ''}`}>
         <header className="mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-4">
           <div className="min-w-0">
             <p className="truncate text-lg font-semibold tracking-tight">{storyMap.title}</p>
@@ -98,7 +98,7 @@ const Main = (props: Props) => {
       </main>
 
       {selectedElement && (
-        <aside className="w-[320px] shrink-0 border-l bg-card/95 backdrop-blur-sm" aria-label="Inspector">
+        <aside className="fixed inset-x-0 bottom-0 z-10 max-h-[60vh] w-full overflow-y-auto border-t bg-card/95 backdrop-blur-sm md:static md:max-h-none md:w-[320px] md:shrink-0 md:border-l md:border-t-0" aria-label="Inspector">
           <Card className="m-4 border-none shadow-none bg-transparent">
             <CardContent className="relative p-0">
               <Button

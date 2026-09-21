@@ -44,10 +44,13 @@ function useMarkdown() {
 
   async function update(newMarkdown: string) {
     setMarkdown(newMarkdown);
-    await fetch(URL, {
+    const response = await fetch(URL, {
       method: 'POST',
       body: JSON.stringify({ storyboard: newMarkdown })
     });
+    if (!response.ok) {
+      throw new Error('Failed to save storyboard');
+    }
     // 再取得したい場合は再度SSEで取得する処理を追加可能
   }
 

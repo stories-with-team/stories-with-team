@@ -50,35 +50,9 @@ const Main = (props: Props) => {
   const storyMap = markdown2storyMap(markdown)
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
-      <aside className="flex w-20 shrink-0 border-r bg-muted/40">
-        <div className="flex w-full flex-col items-center gap-3 pt-5">
-          <Button
-            type="button"
-            variant={mode === 'storyboard' ? 'secondary' : 'ghost'}
-            size="icon"
-            className="h-11 w-11 rounded-xl"
-            onClick={toStoryboardMode}
-            disabled={editorError}
-            aria-label="Storyboard mode"
-          >
-            <NotebookText className="h-5 w-5" />
-          </Button>
-          <Button
-            type="button"
-            variant={mode === 'markdown' ? 'secondary' : 'ghost'}
-            size="icon"
-            className="h-11 w-11 rounded-xl"
-            onClick={toMarkdownMode}
-            aria-label="Markdown mode"
-          >
-            <Keyboard className="h-5 w-5" />
-          </Button>
-        </div>
-      </aside>
-
-      <main className="min-w-0 flex-1 p-6">
-        <header className="mx-auto mb-6 flex max-w-6xl items-center justify-between gap-4 border-b border-border/60 pb-4">
+    <div className="min-h-screen bg-background text-foreground">
+      <main className="min-w-0 p-6">
+        <header className="mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-4">
           <div className="min-w-0">
             <p className="truncate text-lg font-semibold tracking-tight">{storyMap.title}</p>
             <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground" aria-live="polite">
@@ -87,6 +61,33 @@ const Main = (props: Props) => {
               {saveState === 'error' && <TriangleAlert className="h-3.5 w-3.5 text-destructive" aria-hidden="true" />}
               <span>{saveState === 'saving' ? 'Saving...' : saveState === 'error' ? 'Save failed' : 'Saved'}</span>
             </div>
+          </div>
+          <div className="flex items-center rounded-lg border bg-muted/40 p-1" role="tablist" aria-label="View mode">
+            <Button
+              type="button"
+              variant={mode === 'storyboard' ? 'secondary' : 'ghost'}
+              size="sm"
+              className="gap-2"
+              onClick={toStoryboardMode}
+              disabled={editorError}
+              role="tab"
+              aria-selected={mode === 'storyboard'}
+            >
+              <NotebookText className="h-4 w-4" aria-hidden="true" />
+              Storyboard
+            </Button>
+            <Button
+              type="button"
+              variant={mode === 'markdown' ? 'secondary' : 'ghost'}
+              size="sm"
+              className="gap-2"
+              onClick={toMarkdownMode}
+              role="tab"
+              aria-selected={mode === 'markdown'}
+            >
+              <Keyboard className="h-4 w-4" aria-hidden="true" />
+              Markdown
+            </Button>
           </div>
         </header>
         {mode === 'storyboard' ? (

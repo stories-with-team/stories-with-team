@@ -21,7 +21,7 @@ test.describe('Main UI', () => {
     const textarea = page.locator('textarea');
     await textarea.fill('### detail without story');
     // エラー表示
-    await expect(page.getByRole('alert')).toContainText('Markdown is invalid');
+    await expect(page.getByRole('alert').filter({ hasText: 'Markdown is invalid' })).toContainText('Markdown is invalid');
     await expect(page.getByRole('tab', { name: 'Storyboard' })).toBeDisabled();
   });
 });

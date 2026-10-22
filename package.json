@@ -35,7 +35,7 @@
     "@storybook/addon-docs": "^10.2.3",
     "@storybook/addon-onboarding": "^10.2.3",
     "@storybook/addon-styling-webpack": "^3.0.0",
-    "@storybook/addon-vitest": "^10.2.3",
+    "@storybook/addon-vitest": "^10.6.2",
     "@storybook/nextjs-vite": "^10.4.6",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22.17.2",
